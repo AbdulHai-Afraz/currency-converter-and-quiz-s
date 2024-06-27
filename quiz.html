@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz</title>
+    <link rel="stylesheet" href="quiz.css">
+</head>
+<body>
+    <div class="container2">
+        <header>
+            <h1>Quiz</h1>
+        </header>
+        
+        <main>
+            <section id="quiz-section">
+                <h2>Quiz Time!</h2>
+                <p id="quiz-intro">Please select the number of questions you would like to answer:</p>
+                <select id="num-questions">
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                    <option value="11">11</option>
+                    <option value="12">12</option>
+                </select>
+                <button id="start-quiz">Start Quiz</button>
+                <div id="quiz-container"></div>
+                <div id="quiz-results"></div>
+            </section>
+
+        </main>
+        
+
+    </div>
+    
+    <script>
+        const questions = [
+            { question: "What is the capital of France?", answers: ["A) Paris", "B) London", "C) Berlin"], correct: "A" },
+            { question: "What is 2 + 2?", answers: ["A) 3", "B) 4", "C) 5"], correct: "B" },
+            { question: "Who wrote 'Hamlet'?", answers: ["A) Charles Dickens", "B) J.K. Rowling", "C) William Shakespeare"], correct: "C" },
+            { question: "What is the capital of Japan?", answers: ["A) Beijing", "B) Seoul", "C) Tokyo"], correct: "C" },
+            { question: "What is the largest planet in our Solar System?", answers: ["A) Earth", "B) Jupiter", "C) Saturn"], correct: "B" },
+            { question: "What is the chemical symbol for water?", answers: ["A) H2O", "B) CO2", "C) O2"], correct: "A" },
+            { question: "What is the square root of 16?", answers: ["A) 2", "B) 4", "C) 8"], correct: "B" },
+            { question: "Who painted the Mona Lisa?", answers: ["A) Vincent van Gogh", "B) Pablo Picasso", "C) Leonardo da Vinci"], correct: "C" },
+            { question: "What is the capital of Italy?", answers: ["A) Rome", "B) Madrid", "C) Lisbon"], correct: "A" },
+            { question: "What is the fastest land animal?", answers: ["A) Cheetah", "B) Lion", "C) Gazelle"], correct: "A" },
+            { question: "What is the top 1 populated country in the world? ", answers: ["A) India", "B) China", "C) America"], correct: "A" },
+            { question: "What is the chemical symbol for the element gold?", answers: ["A) Ag", "B) Fe", "C) Au"], correct: "C" }
+
+        ];
+
+        document.getElementById('start-quiz').addEventListener('click', startQuiz);
+
+        function startQuiz() {
+            const numQuestions = parseInt(document.getElementById('num-questions').value);
+
+            const shuffledQuestions = questions.sort(() => 0.5 - Math.random()).slice(0, numQuestions);
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = '';
+            shuffledQuestions.forEach((q, index) => {
+                const questionElem = document.createElement('div');
+                questionElem.innerHTML = `
+                    <p>${index + 1}. ${q.question}</p>
+                    <p>
+                        <label><input type="radio" name="question${index}" value="A"> ${q.answers[0]}</label><br>
+                        <label><input type="radio" name="question${index}" value="B"> ${q.answers[1]}</label><br>
+                        <label><input type="radio" name="question${index}" value="C"> ${q.answers[2]}</label>
+                    </p>
+                `;
+                quizContainer.appendChild(questionElem);
+            });
+
+            const submitButton = document.createElement('button');
+            submitButton.textContent = 'Submit Answers';
+            submitButton.classList.add('submit-button');
+            submitButton.addEventListener('click', () => submitAnswers(shuffledQuestions));
+            quizContainer.appendChild(submitButton);
+
+            document.getElementById('quiz-intro').style.display = 'none';
+            document.getElementById('start-quiz').style.display = 'none';
+            document.getElementById('num-questions').style.display = 'none';
+        }
+
+        function submitAnswers(questions) {
+            let correctCount = 0;
+            const quizResults = document.getElementById('quiz-results');
+            quizResults.innerHTML = '';
+
+            questions.forEach((q, index) => {
+                const selectedAnswer = document.querySelector(`input[name="question${index}"]:checked`);
+                const userAnswer = selectedAnswer ? selectedAnswer.value : null;
+
+                const resultElem = document.createElement('p');
+                if (userAnswer === q.correct) {
+                    resultElem.textContent = `Question ${index + 1}: CORRECT`;
+                    resultElem.classList.add('correct');
+                    correctCount++;
+                } else {
+                    resultElem.textContent = `Question ${index + 1}: INCORRECT. Correct answer: ${q.correct}`;
+                    resultElem.classList.add('incorrect');
+                }
+                quizResults.appendChild(resultElem);
+            });
+
+            const totalQuestions = questions.length;
+            const percentage = ((correctCount / totalQuestions) * 100).toFixed(2);
+
+            const summaryElem = document.createElement('p');
+            summaryElem.textContent = `You answered ${correctCount} out of ${totalQuestions} questions correctly (${percentage}%).`;
+            quizResults.appendChild(summaryElem);
+        }
+    </script>
+</body>
+</html>

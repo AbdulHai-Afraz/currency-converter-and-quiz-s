@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fortune Teller and Currency Converter</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Fortune Teller and Currency Converter</h1>
+        </header>
+
+        <main>
+            <div class="main-content">
+                <section id="image-section">
+                    <img src="Capture.JPG" alt="Image Description" id="left-image">
+                </section>
+                
+                <section id="converter-section">
+                    <h2>Currency Converter</h2>
+                    <form id="currency-form">
+                        <label for="usd">USD:</label>
+                        <input type="number" id="usd" name="usd" oninput="convertCurrency('usd')">
+                        
+                        <label for="gbp">GBP:</label>
+                        <input type="number" id="gbp" name="gbp" oninput="convertCurrency('gbp')">
+                        
+                        <label for="cad">CAD:</label>
+                        <input type="number" id="cad" name="cad" oninput="convertCurrency('cad')">
+                        
+                        <label for="eur">EUR:</label>
+                        <input type="number" id="eur" name="eur" oninput="convertCurrency('eur')">
+                        
+                        <label for="aud">AUD:</label>
+                        <input type="number" id="aud" name="aud" oninput="convertCurrency('aud')">
+                        
+                        
+                    </form>
+                </section>
+            </div>
+            
+            <section id="quiz-link-section">
+                <h2>Take a Quiz!</h2>
+                <p><a href="quiz.html" id="quiz-link">Click here to start the quiz</a></p>
+            </section>
+        </main>
+
+        <div id="fortune-box">
+            <p id="fortune-text"></p>
+        </div>
+
+        <footer>
+            <p>email: abdulhai.afraz@gmail.com</p>
+            <p>number:01625721234</p>
+        </footer>
+    </div>
+    
+    <script>
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const fortunes = [
+                "You will have a great day!",
+                "Something wonderful is about to happen.",
+                "Expect the unexpected.",
+                "You will achieve your goals.",
+                "Happiness is in your future.",
+                "You will find what you seek.",
+                "Today is a good day to start something new.",
+                "Your hard work will pay off soon.",
+                "Wishing you wealth, health, and happiness.",
+                "May your heart be light, your mind be clear, and your days be joyful.",
+                "May your dreams soar as high as the brightest stars."
+            ];
+
+            const randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+            document.getElementById('fortune-text').textContent = randomFortune;
+        });
+
+        // Currency Converter
+        const exchangeRates = {
+            usd: { usd: 1, gbp: 0.49246, cad: 0.98054, eur: 0.70641, aud: 1.13262 },
+            gbp: { usd: 2.03032, gbp: 1, cad: 1.99169, eur: 1.43448, aud: 2.29964 },
+            cad: { usd: 1.01941, gbp: 0.50221, cad: 1, eur: 0.72037, aud: 1.15498 },
+            eur: { usd: 1.41544, gbp: 0.69714, cad: 1.38814, eur: 1, aud: 1.60329 },
+            aud: { usd: 0.88297, gbp: 0.43497, cad: 0.86613, eur:0.62382, aud: 1 }
+        };
+
+        function convertCurrency(fromCurrency) {
+            const value = parseFloat(document.getElementById(fromCurrency).value);
+
+            if (isNaN(value)) {
+                resetFields();
+                return;
+            }
+
+            for (const currency in exchangeRates[fromCurrency]) {
+                if (currency !== fromCurrency) {
+                    const convertedValue = value * exchangeRates[fromCurrency][currency];
+                    document.getElementById(currency).value = convertedValue.toFixed(5);
+                }
+            }
+        }
+
+        function resetFields() {
+            document.getElementById('usd').value = '';
+            document.getElementById('gbp').value = '';
+            document.getElementById('cad').value = '';
+            document.getElementById('eur').value = '';
+            document.getElementById('aud').value = '';
+            
+        }
+
+    </script>
+</body>
+</html>
